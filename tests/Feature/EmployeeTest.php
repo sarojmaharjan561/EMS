@@ -27,8 +27,9 @@ class EmployeeTest extends TestCase
             'phone' => '9841253625'
         ]);
 
-        $response->assertOk();      
+        $employee = Employee::first();     
         $this->assertCount(1,Employee::all());
+        $response->assertRedirect($employee->path());
    
     }
 
@@ -62,7 +63,6 @@ class EmployeeTest extends TestCase
 
     public function test_employee_can_be_updated(){
     
-        $this->withoutExceptionHandling();
         $this->post('/employees',[
             'first_name' => 'Ram',
             'last_name' => 'Thapa',
@@ -72,16 +72,38 @@ class EmployeeTest extends TestCase
 
         $employee = Employee::first();
 
-        $this->patch('/employees/'.$employee->id,[
+        $response = $this->patch($employee->path(),[
             'first_name' => 'Rama',
             'last_name' => 'Lama',
             'email' => 'rama.lama007@gmail.com',
             'phone' => '9841253645'
         ]);
-
+        
         $this->assertEquals('Rama',Employee::first()->first_name);      
         $this->assertEquals('Lama',Employee::first()->last_name);      
         $this->assertEquals('rama.lama007@gmail.com',Employee::first()->email);      
-        $this->assertEquals('9841253645',Employee::first()->phone);     
+        $this->assertEquals('9841253645',Employee::first()->phone);  
+        
+        $response->assertRedirect($employee->path());
+    }
+
+    public function test_employee_can_be_deleted(){
+        // $this->withoutExceptionHandling();
+        
+        $this->post('/employees',[
+            'first_name' => 'Ram',
+            'last_name' => 'Thapa',
+            'email' => 'ram.thapa007@gmail.com',
+            'phone' => '9841253625'
+        ]);
+        
+        $employee = Employee::first();
+        $this->assertCount(1,Employee::all());
+        
+        $response = $this->delete($employee->path());
+        
+        $this->assertCount(0,Employee::all());
+
+        $response->assertRedirect('/employees');
     }
 }
