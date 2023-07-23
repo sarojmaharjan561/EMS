@@ -93,6 +93,7 @@ class EmployeeController extends Controller
     protected function validateRequest()
     {
         return request()->validate([
+            'company_id' => 'required',
             'first_name' => 'required',
             'last_name' => 'required',
             'email' => '',
