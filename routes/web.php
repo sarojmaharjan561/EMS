@@ -1,9 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CompanyController;
-use App\Http\Controllers\EmployeeController;
-use App\Models\Company;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,12 +17,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/employees',[EmployeeController::class,'index']);
-Route::post('/employees',[EmployeeController::class,'store']);
-Route::patch('/employees/{employee}',[EmployeeController::class,'update']);
-Route::delete('/employees/{employee}',[EmployeeController::class,'destroy']);
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
-Route::get('/company',[CompanyController::class,'index']);
-Route::post('/company',[CompanyController::class,'store']);
-Route::patch('/company/{company}',[CompanyController::class,'update']);
-Route::delete('/company/{company}',[CompanyController::class,'destroy']);
+require __DIR__.'/auth.php';
